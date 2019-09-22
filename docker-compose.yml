@@ -1,0 +1,39 @@
+# v3 syntax
+version: "3"
+
+# Named volumes
+volumes:
+  # MySQL Data
+  dart-mysql-data:
+    driver: local
+
+services:
+  # MySQL (5.7)
+  database:
+    image: mysql:5.7
+    container_name: dart-mysql
+    volumes:
+      - dart-mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=dart
+      - MYSQL_DATABASE=dart
+      - MYSQL_USER=dart
+      - MYSQL_PASSWORD=dart
+      
+  # PHPMYADMIN
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: dart-phpmyadmin
+    depends_on:
+      - database
+    links:
+      - database
+    ports:
+      - "81:80"
+    environment:
+      - PMA_HOST=database
+      - MYSQL_ROOT_PASSWORD=dart
+      - MYSQL_USER=dart
+      - MYSQL_PASSWORD=dart
